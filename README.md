@@ -10,9 +10,9 @@ use Genkgo\Favicon;
 
 $outputDirectory = '/var/www/html/favicon';
 
-$input = Input::fromFile('/var/www/html/logo.png', InputImageType::PNG);
+$input = Favicon\Input::fromFile('/var/www/html/logo.png', InputImageType::PNG);
 // or
-$input = Input::fromFile('/var/www/html/logo.svg', InputImageType::SVG);
+$input = Favicon\Input::fromFile('/var/www/html/logo.svg', InputImageType::SVG);
 // or
 $input = Favicon\Input::letter('G', '#FFFFFF', '#00aaad');
 

@@ -2,6 +2,8 @@
 
 [![Latest Version](https://img.shields.io/github/release/genkgo/favicon.svg?style=flat-square)](https://github.com/genkgo/favicon/releases)
 
+Requires PHP 8.1+, and both the imagick and DOM extension.
+
 ## Create favicon package quick and easy
 
 ```php
@@ -45,6 +47,12 @@ foreach ($generator->package() as $fileName => $contents) {
 - mstile-150x150.png
 - mstile-310x310.png
 
+## Install using composer
+
+```bash
+$ composer require genkgo/favicon
+```
+
 ## Tests
 
-There are no tests.
+There are no tests. Maybe later.

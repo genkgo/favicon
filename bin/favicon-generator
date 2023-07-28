@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Genkgo\Favicon\AggregatePackage;
+use Genkgo\Favicon\AndroidChromePackage;
+use Genkgo\Favicon\AppleTouchIconPackage;
+use Genkgo\Favicon\FullPackageGenerator;
+use Genkgo\Favicon\GenericIcoPackage;
+use Genkgo\Favicon\GenericPngPackage;
+use Genkgo\Favicon\MicrosoftTilePackage;
+use Genkgo\Favicon\Input;
+use Genkgo\Favicon\InputImageType;
+
+function writeln(string $line, string|int ... $values) {
+    echo sprintf($line, ...$values) . "\n";
+}
+
+(function ($arguments) {
+    error_reporting(-1);
+
+    $dir = __DIR__.'/..';
+
+    if (!file_exists($dir.'/autoload.php')) {
+        $dir = __DIR__.'/../vendor';
+    }
+
+    if (!file_exists($dir.'/autoload.php')) {
+        $dir = __DIR__.'/../../..';
+    }
+
+    if (!file_exists($dir.'/autoload.php')) {
+        writeln('Autoload not found.');
+        exit(1);
+    }
+
+    require $dir.'/autoload.php';
+
+    if (!array_key_exists(1, $arguments)) {
+        writeln('[ERROR] Source image is required');
+        exit(1);
+    }
+
+    $sourceFile = $arguments[1];
+    if (!file_exists($sourceFile)) {
+        writeln('[ERROR] Source image %s does not exist', $sourceFile);
+        exit(1);
+    }
+
+//    $input = Input::fromFile($sourceFile, InputImageType::PNG);
+    $input = Input::letter('G', '#FFFFFF', '#00aaad');
+    $outputDirectory = $arguments[2] ?? getcwd();
+    $tileColor = $arguments[3] ?? '#FFFFFF';
+    $rootPrefix = $arguments[4] ?? '/';
+
+    $generator = new FullPackageGenerator($input, $tileColor, $rootPrefix);
+    foreach ($generator->package() as $fileName => $contents) {
+        $pathName = $outputDirectory . '/' . $fileName;
+        $result = file_put_contents($pathName, $contents);
+        if ($result === false) {
+            writeln('[ERROR] Failed to save %s', $pathName);
+        } else {
+            writeln('[INFO] Saved %s with size %s', $pathName, filesize($pathName));
+        }
+    }
+})($argv);

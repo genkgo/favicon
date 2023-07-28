@@ -1,0 +1,20 @@
+{
+  "name": "genkgo/favicon",
+  "description": "Generate browser favicons",
+  "license": "MIT",
+  "require": {
+    "php": "~8.1.0 || ~8.2.0",
+    "ext-imagick": "*",
+    "ext-dom": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Genkgo\\Favicon\\": ["src"]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Genkgo\\TestFavicon\\": ["test"]
+    }
+  }
+}

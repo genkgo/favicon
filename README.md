@@ -2,7 +2,7 @@
 
 [![Latest Version](https://img.shields.io/github/release/genkgo/favicon.svg?style=flat-square)](https://github.com/genkgo/favicon/releases)
 
-Requires PHP 8.1+, and both the imagick and DOM extension.
+Requires PHP 8.1+ and both the imagick and DOM extension.
 
 ## Create favicon package quick and easy
 

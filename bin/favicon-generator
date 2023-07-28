@@ -41,14 +41,28 @@ function writeln(string $line, string|int ... $values) {
         exit(1);
     }
 
-    $sourceFile = $arguments[1];
-    if (!file_exists($sourceFile)) {
-        writeln('[ERROR] Source image %s does not exist', $sourceFile);
+    $inputString = $arguments[1];
+    if (str_starts_with($inputString, 'file:')) {
+        $file = substr($inputString, 5);
+        if (!file_exists($file)) {
+            writeln('[ERROR] Input image %s does not exist', $file);
+            exit(1);
+        }
+
+        $input = Input::fromFile($file, InputImageType::PNG);
+    } elseif (str_starts_with($inputString, 'letter:')) {
+        $letter = substr($inputString, 7);
+        if (strlen($letter) !== 1) {
+            writeln('[ERROR] Input letter got only be 1 character, got %s', $letter);
+            exit(1);
+        }
+
+        $input = Input::letter($letter, '#FFFFFF', '#00aaad');
+    } else {
+        writeln('[ERROR] Unknown input string %s. Please start with file: or letter:', $inputString);
         exit(1);
     }
 
-//    $input = Input::fromFile($sourceFile, InputImageType::PNG);
-    $input = Input::letter('G', '#FFFFFF', '#00aaad');
     $outputDirectory = $arguments[2] ?? getcwd();
     $tileColor = $arguments[3] ?? '#FFFFFF';
     $rootPrefix = $arguments[4] ?? '/';

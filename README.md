@@ -25,6 +25,13 @@ foreach ($generator->package() as $fileName => $contents) {
 }
 ```
 
+or use the command-line.
+
+```bash
+./vendor/bin/favicon-generator file:public/logo.png output 
+./vendor/bin/favicon-generator letter:G output
+```
+
 ## Default package
 
 - android-chrome-192x192.png

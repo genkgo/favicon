@@ -8,7 +8,7 @@ final class FullPackageGenerator implements PackageAppendInterface
 {
     public function __construct(
         private readonly Input $input,
-        private readonly string $tileColor,
+        private readonly string $backgroundColor,
         private readonly string $themeColor,
         private readonly string $name,
         private readonly string $rootPrefix = '/',
@@ -26,10 +26,10 @@ final class FullPackageGenerator implements PackageAppendInterface
                 $this->shortName ?? $this->name,
                 $this->themeColor,
                 $this->rootPrefix,
-                $this->tileColor
+                $this->backgroundColor
             ),
             new AppleTouchIconPackage($this->input),
-            new MicrosoftTilePackage($this->input, $this->tileColor, $this->rootPrefix),
+            new MicrosoftTilePackage($this->input, $this->backgroundColor, $this->rootPrefix),
         ]);
         return $generator->package();
     }

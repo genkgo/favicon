@@ -18,7 +18,13 @@ $input = Favicon\Input::fromFile('/var/www/html/logo.svg', InputImageType::SVG);
 // or
 $input = Favicon\Input::letter('G', '#FFFFFF', '#00aaad');
 
-$generator = new Favicon\FullPackageGenerator($input, '#FFFFFF');
+$generator = new Favicon\FullPackageGenerator(
+    $input,
+    '#00AAAD', // background color
+    '#00AAAD', // theme color
+    'Website Title',
+    '/',
+);
 foreach ($generator->package() as $fileName => $contents) {
     $pathName = $outputDirectory . '/' . $fileName;
     file_put_contents($pathName, $contents);

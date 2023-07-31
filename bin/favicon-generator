@@ -152,12 +152,12 @@ final class CliContext
         $outputDirectory = getcwd();
     }
 
-    $tileColor = $context->getOption('tile-color', '#00AAAD');
+    $backgroundColor = $context->getOption('background-color', '#00AAAD');
     $rootPrefix = $context->getOption('root', '/');
 
     $generator = new FullPackageGenerator(
         $input,
-        $tileColor,
+        $backgroundColor,
         $context->getOption('theme-color', '#00AAAD'),
         $name,
         $rootPrefix,

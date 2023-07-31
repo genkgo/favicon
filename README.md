@@ -28,14 +28,15 @@ foreach ($generator->package() as $fileName => $contents) {
 or use the command-line.
 
 ```bash
-./vendor/bin/favicon-generator file:public/logo.png output 
-./vendor/bin/favicon-generator letter:G output
+./vendor/bin/favicon-generator --help
+./vendor/bin/favicon-generator 'Title of the website' file:public/logo.png output 
+./vendor/bin/favicon-generator 'Title of the website' file:public/logo.png output --theme-color=#00AAAD --background-color=#00AAAD --root=/
+./vendor/bin/favicon-generator 'Title of the website' letter:G output
+./vendor/bin/favicon-generator 'Title of the website' letter:G output --letter-color=#FFFFFF --theme-color=#00AAAD --background-color=#00AAAD --root=/
 ```
 
 ## Default package
 
-- android-chrome-192x192.png
-- android-chrome-512x512.png
 - apple-touch-icon.png
 - browserconfig.xml
 - favicon.ico
@@ -50,9 +51,11 @@ or use the command-line.
 - favicon-128x128.png
 - favicon-192x192.png
 - favicon-228x228.png
+- favicon-512x512.png
 - mstile-70x70.png
 - mstile-150x150.png
 - mstile-310x310.png
+- web-app-manifest.json
 
 ## Install using composer
 

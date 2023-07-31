@@ -2,13 +2,7 @@
 <?php
 declare(strict_types=1);
 
-use Genkgo\Favicon\AggregatePackage;
-use Genkgo\Favicon\AndroidChromePackage;
-use Genkgo\Favicon\AppleTouchIconPackage;
 use Genkgo\Favicon\FullPackageGenerator;
-use Genkgo\Favicon\GenericIcoPackage;
-use Genkgo\Favicon\GenericPngPackage;
-use Genkgo\Favicon\MicrosoftTilePackage;
 use Genkgo\Favicon\Input;
 use Genkgo\Favicon\InputImageType;
 
@@ -16,7 +10,67 @@ function writeln(string $line, string|int ... $values) {
     echo sprintf($line, ...$values) . "\n";
 }
 
-(function ($arguments) {
+final class CliContext
+{
+    /**
+     * @param array<int, string> $arguments
+     * @param array<string, string> $options
+     */
+    public function __construct(
+        private readonly string $script,
+        private readonly array $arguments,
+        private readonly array $options
+    ) {
+    }
+
+    public function getScript(): string
+    {
+        return $this->script;
+    }
+
+    public function getArgument(int $index): string
+    {
+        if (!array_key_exists($index, $this->arguments)) {
+            throw new \InvalidArgumentException('Unknown argument at ' . $index);
+        }
+
+        return $this->arguments[$index];
+    }
+
+    public function getOption(string $name, string $default = ''): string
+    {
+        if (!array_key_exists($name, $this->options)) {
+            return $default;
+        }
+
+        return $this->options[$name];
+    }
+
+    public static function fromArgv(array $argv): self
+    {
+        $script = array_shift($argv);
+        $arguments = [];
+        $options = [];
+
+        while ($arg = array_shift($argv)) {
+            if (str_starts_with($arg, '--')) {
+                $optionString = substr($arg, 2);
+                $optionSep = explode('=', $optionString, 2);
+                if (count($optionSep) === 1) {
+                    $options[$optionSep[0]] = '1';
+                } else {
+                    $options[$optionSep[0]] = $optionSep[1];
+                }
+            } else {
+                $arguments[] = $arg;
+            }
+        }
+
+        return new self($script, array_values($arguments), $options);
+    }
+}
+
+(function (CliContext $context) {
     error_reporting(-1);
 
     $dir = __DIR__.'/..';
@@ -36,12 +90,37 @@ function writeln(string $line, string|int ... $values) {
 
     require $dir.'/autoload.php';
 
-    if (!array_key_exists(1, $arguments)) {
+    if ($context->getOption('help') === '1') {
+        writeln('Genkgo Favicon Generator');
+        writeln('Script: %s', $context->getScript());
+        writeln('');
+        writeln('Arguments:');
+        writeln('0: name of the website');
+        writeln('');
+        writeln('1: input type, specify either letter or file');
+        writeln('1: letter:[LETTER] for a letter avatar');
+        writeln('1: file:[FILE LOCATION] for a file input');
+        writeln('');
+        writeln('2: output directory, defaults to current working directory');
+        writeln('');
+        writeln('Options:');
+        writeln('--background-color     Color to used in manifest `background_color` and used fill ms-tiles with, defaults to #00AAAD');
+        writeln('--theme-color          Color to used in manifest `theme_color` and default letter background color, defaults to #00AAAD');
+        writeln('--letter-color         Color of the letter, used when using letter: input, defaults to #FFFFFF');
+        writeln('--letter-background    Color of the background, used when using letter: input, defaults to theme color');
+        writeln('--root                 Location inside the root directory where the favicons are saved to, defaults to /');
+        exit(0);
+    }
+
+    $name = $context->getArgument(0);
+
+    try {
+        $inputString = $context->getArgument(1);
+    } catch (InvalidArgumentException) {
         writeln('[ERROR] Source image is required');
         exit(1);
     }
 
-    $inputString = $arguments[1];
     if (str_starts_with($inputString, 'file:')) {
         $file = substr($inputString, 5);
         if (!file_exists($file)) {
@@ -57,17 +136,32 @@ function writeln(string $line, string|int ... $values) {
             exit(1);
         }
 
-        $input = Input::letter($letter, '#FFFFFF', '#00aaad');
+        $input = Input::letter(
+            $letter,
+            $context->getOption('letter-color', '#FFFFFF'),
+            $context->getOption('letter-background', $context->getOption('theme-color', '#00AAAD')),
+        );
     } else {
         writeln('[ERROR] Unknown input string %s. Please start with file: or letter:', $inputString);
         exit(1);
     }
 
-    $outputDirectory = $arguments[2] ?? getcwd();
-    $tileColor = $arguments[3] ?? '#FFFFFF';
-    $rootPrefix = $arguments[4] ?? '/';
+    try {
+        $outputDirectory = $context->getArgument(2);
+    } catch (InvalidArgumentException) {
+        $outputDirectory = getcwd();
+    }
 
-    $generator = new FullPackageGenerator($input, $tileColor, $rootPrefix);
+    $tileColor = $context->getOption('tile-color', '#00AAAD');
+    $rootPrefix = $context->getOption('root', '/');
+
+    $generator = new FullPackageGenerator(
+        $input,
+        $tileColor,
+        $context->getOption('theme-color', '#00AAAD'),
+        $name,
+        $rootPrefix,
+    );
     foreach ($generator->package() as $fileName => $contents) {
         $pathName = $outputDirectory . '/' . $fileName;
         $result = file_put_contents($pathName, $contents);
@@ -77,4 +171,4 @@ function writeln(string $line, string|int ... $values) {
             writeln('[INFO] Saved %s with size %s', $pathName, filesize($pathName));
         }
     }
-})($argv);
+})(CliContext::fromArgv($argv));

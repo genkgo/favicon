@@ -17,6 +17,7 @@ final class SafariPinGenerator implements GeneratorInterface
         }
 
         // If someone knows how to convert a PNG to SVG by using the Imagick extension in PHP, I'd love to know how.
+        // https://github.com/Imagick/imagick/issues/622
         return $this->tempFile(
             function ($source, $target) {
                 $sourceHandle = \fopen($source, 'r+');

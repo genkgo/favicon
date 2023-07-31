@@ -61,6 +61,7 @@ or use the command-line.
 - mstile-70x70.png
 - mstile-150x150.png
 - mstile-310x310.png
+- safari-pinned-tab.svg
 - web-app-manifest.json
 
 ## Install using composer

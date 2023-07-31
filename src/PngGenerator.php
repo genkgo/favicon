@@ -9,19 +9,14 @@ final class PngGenerator implements GeneratorInterface
     public function __construct(
         private readonly Input $input,
         private readonly int $size,
-        private readonly ?string $backgroundColor = null,
+        private readonly string $backgroundColor = 'transparent',
     ) {
     }
 
     public function generate(): string
     {
         $imagick = new \Imagick();
-        if ($this->backgroundColor) {
-            $imagick->setBackgroundColor(new \ImagickPixel($this->backgroundColor));
-        } else {
-            $imagick->setBackgroundColor(new \ImagickPixel('transparent'));
-        }
-
+        $imagick->setBackgroundColor(new \ImagickPixel($this->backgroundColor));
         $imagick->readImageFile($this->input->rewindedFileHandle());
         $imagick = $imagick->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN);
 

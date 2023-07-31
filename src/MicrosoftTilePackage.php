@@ -13,8 +13,8 @@ final class MicrosoftTilePackage implements PackageAppendInterface
         private readonly Input $input,
         private readonly string $tileColor,
         private readonly string $rootPrefix = '/',
+        private readonly string $backgroundColor = 'transparent',
         private readonly array $sizes = [70, 150, 310],
-        private readonly ?string $backgroundColor = null,
     ) {
     }
 

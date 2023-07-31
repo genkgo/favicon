@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Genkgo\Favicon;
 
-final class SafariPinGenerator implements GeneratorInterface
+final class AppleSafariPinGenerator implements GeneratorInterface
 {
     public function __construct(private readonly Input $input, private readonly string $executable = 'magick')
     {

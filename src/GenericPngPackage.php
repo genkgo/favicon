@@ -15,7 +15,8 @@ final class GenericPngPackage implements PackageAppendInterface
         private readonly string $shortName,
         private readonly string $themeColor,
         private readonly string $rootPrefix = '/',
-        private readonly ?string $backgroundColor = null,
+        private readonly ?string $tileColor = null,
+        private readonly string $backgroundColor = 'transparent',
         private readonly array $sizes = [32, 16, 48, 57, 76, 96, 128, 192, 228, 512],
         private readonly WebApplicationManifestDisplay $display = WebApplicationManifestDisplay::Standalone,
     ) {
@@ -31,7 +32,7 @@ final class GenericPngPackage implements PackageAppendInterface
         $first = true;
         $manifestFormats = [];
         foreach ($this->sizes as $size) {
-            $generator = new PngGenerator($this->input, $size);
+            $generator = new PngGenerator($this->input, $size, $this->backgroundColor);
             $blob = $generator->generate();
             if ($first) {
                 yield 'favicon.png' => $blob;
@@ -47,7 +48,7 @@ final class GenericPngPackage implements PackageAppendInterface
             $this->name,
             $this->shortName,
             $this->themeColor,
-            $this->backgroundColor ?? '#FFFFFF',
+            $this->tileColor ?? '#FFFFFF',
             $manifestFormats
         );
 

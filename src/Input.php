@@ -17,7 +17,6 @@ final class Input
     private function __construct(
         $file,
         public readonly InputImageType $type,
-        public readonly float $embeddedPadding = 0.0,
         public readonly string $backgroundColor = 'transparent',
     ) {
         $this->file = $file;
@@ -35,7 +34,6 @@ final class Input
     public static function fromFile(
         string $fileName,
         InputImageType $type,
-        float $embeddedPadding = 0.0,
         string $backgroundColor = 'transparent',
     ): self
     {
@@ -43,20 +41,19 @@ final class Input
             throw new \InvalidArgumentException('File ' . $fileName . ' does not exist');
         }
 
-        return new self(fopen($fileName, 'r'), $type, $embeddedPadding, $backgroundColor);
+        return new self(fopen($fileName, 'r'), $type, $backgroundColor);
     }
 
     public static function fromString(
         string $content,
         InputImageType $type,
-        float $embeddedPadding = 0.0,
         string $backgroundColor = 'transparent',
     ): self
     {
         $resource = \fopen('php://memory', 'r+');
         \fwrite($resource, $content);
         \rewind($resource);
-        return new self($resource, $type, $embeddedPadding, $backgroundColor);
+        return new self($resource, $type, $backgroundColor);
     }
 
     public static function letter(string $letter, string $color, string $backgroundColor): self

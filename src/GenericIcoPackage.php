@@ -11,8 +11,8 @@ final class GenericIcoPackage implements PackageAppendInterface
      */
     public function __construct(
         private readonly Input $input,
+        private readonly string $backgroundColor = 'transparent',
         private readonly array $sizes = [48],
-        private readonly ?string $backgroundColor = null,
     ) {
     }
 
@@ -20,7 +20,7 @@ final class GenericIcoPackage implements PackageAppendInterface
     {
         $first = true;
         foreach ($this->sizes as $size) {
-            $generator = new IcoGenerator($this->input, $size, $this->backgroundColor);
+            $generator = new IcoGenerator($this->input, $this->backgroundColor, $size);
             $blob = $generator->generate();
             if ($first) {
                 yield 'favicon.ico' => $blob;

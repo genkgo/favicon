@@ -104,8 +104,9 @@ final class CliContext
         writeln('2: output directory, defaults to current working directory');
         writeln('');
         writeln('Options:');
-        writeln('--background-color     Color to used in manifest `background_color` and used fill ms-tiles with, defaults to #00AAAD');
+        writeln('--background-color     Set color under icon, defaults to transparent');
         writeln('--theme-color          Color to used in manifest `theme_color` and default letter background color, defaults to #00AAAD');
+        writeln('--tile-color           Color to used in manifest `background_color` and used fill ms-tiles with, defaults to #00AAAD');
         writeln('--letter-color         Color of the letter, used when using letter: input, defaults to #FFFFFF');
         writeln('--letter-background    Color of the background, used when using letter: input, defaults to theme color');
         writeln('--root                 Location inside the root directory where the favicons are saved to, defaults to /');
@@ -152,13 +153,14 @@ final class CliContext
         $outputDirectory = getcwd();
     }
 
-    $backgroundColor = $context->getOption('background-color', '#00AAAD');
+    $tileColor = $context->getOption('tile-color', '#00AAAD');
     $rootPrefix = $context->getOption('root', '/');
 
     $generator = new FullPackageGenerator(
         $input,
-        $backgroundColor,
         $context->getOption('theme-color', '#00AAAD'),
+        $context->getOption('background-color', 'transparent'),
+        $tileColor,
         $name,
         $rootPrefix,
     );

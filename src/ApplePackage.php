@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Genkgo\Favicon;
 
-final class AppleTouchIconPackage implements PackageAppendInterface
+final class ApplePackage implements PackageAppendInterface
 {
     public function __construct(
         private readonly Input $input,
@@ -17,5 +17,8 @@ final class AppleTouchIconPackage implements PackageAppendInterface
     {
         $generator = new PngGenerator($this->input, $this->size, $this->backgroundColor);
         yield 'apple-touch-icon.png' => $generator->generate();
+
+        $generator = SafariPinGenerator::cliDetectImageMagickVersion($this->input);
+        yield 'safari-pinned-tab.svg' => $generator->generate();
     }
 }

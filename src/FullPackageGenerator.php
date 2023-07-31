@@ -19,6 +19,7 @@ final class FullPackageGenerator implements PackageAppendInterface
     public function package(): \Generator
     {
         $generator = new AggregatePackage([
+            new ApplePackage($this->input),
             new GenericIcoPackage($this->input),
             new GenericPngPackage(
                 $this->input,
@@ -28,7 +29,6 @@ final class FullPackageGenerator implements PackageAppendInterface
                 $this->rootPrefix,
                 $this->backgroundColor
             ),
-            new AppleTouchIconPackage($this->input),
             new MicrosoftTilePackage($this->input, $this->backgroundColor, $this->rootPrefix),
         ]);
         return $generator->package();

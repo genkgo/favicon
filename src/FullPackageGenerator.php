@@ -8,7 +8,6 @@ final class FullPackageGenerator implements PackageAppendInterface
 {
     private function __construct(
         private readonly AggregatePackage $packages,
-        private readonly string $title,
         private readonly string $themeColor
     ) {
     }
@@ -28,9 +27,6 @@ final class FullPackageGenerator implements PackageAppendInterface
         $meta->setAttribute('http-equiv', 'Content-Type');
         $meta->setAttribute('content', 'text/html; charset=utf-8');
         $head->appendChild($meta);
-
-        $title = $document->createElement('title', $this->title);
-        $head->appendChild($title);
 
         foreach ($this->headTags($document) as $tag) {
             $head->appendChild($tag);
@@ -79,7 +75,6 @@ final class FullPackageGenerator implements PackageAppendInterface
                     $rootPrefix,
                 ),
             ]),
-            $name,
             $themeColor
         );
     }

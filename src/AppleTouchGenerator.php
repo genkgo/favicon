@@ -9,18 +9,12 @@ final class AppleTouchGenerator implements GeneratorInterface
     public function __construct(
         private readonly Input $input,
         private readonly int $size,
-        private readonly string $backgroundColor = 'transparent',
     ) {
     }
 
     public function generate(): string
     {
-        $imagick = new \Imagick();
-        $backgroundPixel = new \ImagickPixel($this->backgroundColor);
-
-        $imagick->setBackgroundColor($backgroundPixel);
-        $imagick->readImageFile($this->input->rewindedFileHandle());
-        $imagick->trimImage(0);
+        $imagick = $this->input->newImagick();
 
         $newWidth = $imagick->getImageWidth();
         $newHeight = $imagick->getImageHeight();
@@ -30,7 +24,7 @@ final class AppleTouchGenerator implements GeneratorInterface
         $composite->newImage($newWidth + 2 * $padding, $newHeight + 2 * $padding, new \ImagickPixel('none'));
 
         $paddingDraw = new \ImagickDraw();
-        $paddingDraw->setFillColor($backgroundPixel);
+        $paddingDraw->setFillColor(new \ImagickPixel($this->input->backgroundColor));
         $paddingDraw->roundRectangle(
             0,
             0,

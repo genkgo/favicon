@@ -9,7 +9,6 @@ final class FullPackageGenerator implements PackageAppendInterface
     public function __construct(
         private readonly Input $input,
         private readonly string $themeColor,
-        private readonly string $backgroundColor,
         private readonly string $tileColor,
         private readonly string $name,
         private readonly string $rootPrefix = '/',
@@ -20,8 +19,8 @@ final class FullPackageGenerator implements PackageAppendInterface
     public function package(): \Generator
     {
         $generator = new AggregatePackage([
-            new ApplePackage($this->input, $this->backgroundColor),
-            new GenericIcoPackage($this->input, $this->backgroundColor),
+            new ApplePackage($this->input),
+            new GenericIcoPackage($this->input),
             new GenericPngPackage(
                 $this->input,
                 $this->name,
@@ -29,13 +28,11 @@ final class FullPackageGenerator implements PackageAppendInterface
                 $this->themeColor,
                 $this->rootPrefix,
                 $this->tileColor,
-                $this->backgroundColor,
             ),
             new MicrosoftTilePackage(
                 $this->input,
                 $this->tileColor,
                 $this->rootPrefix,
-                $this->backgroundColor,
             ),
         ]);
         return $generator->package();

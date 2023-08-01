@@ -13,7 +13,6 @@ final class MicrosoftTilePackage implements PackageAppendInterface
         private readonly Input $input,
         private readonly string $tileColor,
         private readonly string $rootPrefix = '/',
-        private readonly string $backgroundColor = 'transparent',
         private readonly array $sizes = [70, 150, 310],
     ) {
     }
@@ -21,7 +20,7 @@ final class MicrosoftTilePackage implements PackageAppendInterface
     public function package(): \Generator
     {
         foreach ($this->sizes as $size) {
-            $generator = new PngGenerator($this->input, $size, $this->backgroundColor);
+            $generator = new PngGenerator($this->input, $size);
             yield 'mstile-' . $size . 'x' . $size . '.png' => $generator->generate();
         }
 

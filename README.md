@@ -13,15 +13,17 @@ use Genkgo\Favicon;
 $outputDirectory = '/var/www/html/favicon';
 
 $input = Favicon\Input::fromFile('/var/www/html/logo.png', InputImageType::PNG);
-// or
+// or add a different background color
+$input = Favicon\Input::fromFile('/var/www/html/logo.png', InputImageType::PNG, '#FF0000');
+// or use a svg as input
 $input = Favicon\Input::fromFile('/var/www/html/logo.svg', InputImageType::SVG);
-// or
-$input = Favicon\Input::letter('G', '#FFFFFF', '#00aaad');
+// or create a letter avatar
+$input = Favicon\Input::digit('G', '#FFFFFF', '#00AAAD');
 
 $generator = new Favicon\FullPackageGenerator(
     $input,
-    '#00AAAD', // background color
     '#00AAAD', // theme color
+    '#00AAAD', // tile color
     'Website Title',
     '/',
 );
@@ -36,9 +38,9 @@ or use the command-line.
 ```bash
 ./vendor/bin/favicon-generator --help
 ./vendor/bin/favicon-generator 'Title of the website' file:public/logo.png output 
-./vendor/bin/favicon-generator 'Title of the website' file:public/logo.png output --theme-color=#00AAAD --background-color=#00AAAD --root=/
+./vendor/bin/favicon-generator 'Title of the website' file:public/logo.png output --theme-color=#00AAAD --icon-background=#00AAAD --root=/
 ./vendor/bin/favicon-generator 'Title of the website' letter:G output
-./vendor/bin/favicon-generator 'Title of the website' letter:G output --letter-color=#FFFFFF --theme-color=#00AAAD --background-color=#00AAAD --root=/
+./vendor/bin/favicon-generator 'Title of the website' letter:G output --letter-color=#FFFFFF --theme-color=#00AAAD --icon-background=#00AAAD --root=/
 ```
 
 ## Default package

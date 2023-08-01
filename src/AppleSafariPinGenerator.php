@@ -13,7 +13,7 @@ final class AppleSafariPinGenerator implements GeneratorInterface
     public function generate(): string
     {
         if ($this->input->type === InputImageType::SVG) {
-            return \stream_get_contents($this->input->rewindedFileHandle());
+            return \stream_get_contents($this->input->newResourceHandle());
         }
 
         // If someone knows how to convert a PNG to SVG by using the Imagick extension in PHP, I'd love to know how.
@@ -21,7 +21,7 @@ final class AppleSafariPinGenerator implements GeneratorInterface
         return $this->tempFile(
             function ($source, $target) {
                 $sourceHandle = \fopen($source, 'r+');
-                \stream_copy_to_stream($this->input->rewindedFileHandle(), $sourceHandle);
+                \stream_copy_to_stream($this->input->newResourceHandle(), $sourceHandle);
                 \fclose($sourceHandle);
 
                 $descriptor = [

@@ -6,7 +6,7 @@ use Genkgo\Favicon\FullPackageGenerator;
 use Genkgo\Favicon\Input;
 use Genkgo\Favicon\InputImageType;
 
-function writeln(string $line, string|int ... $values) {
+function writeln(string $line, string|int ... $values): void {
     echo sprintf($line, ...$values) . "\n";
 }
 
@@ -104,7 +104,7 @@ final class CliContext
         writeln('2: output directory, defaults to current working directory');
         writeln('');
         writeln('Options:');
-        writeln('--background-color     Set color under icon, defaults to transparent');
+        writeln('--icon-background      Set color under icon, defaults to transparent');
         writeln('--theme-color          Color to used in manifest `theme_color` and default letter background color, defaults to #00AAAD');
         writeln('--tile-color           Color to used in manifest `background_color` and used fill ms-tiles with, defaults to #00AAAD');
         writeln('--letter-color         Color of the letter, used when using letter: input, defaults to #FFFFFF');
@@ -129,7 +129,7 @@ final class CliContext
             exit(1);
         }
 
-        $input = Input::fromFile($file, InputImageType::PNG);
+        $input = Input::fromFile($file, InputImageType::PNG, $context->getOption('icon-background', 'transparent'));
     } elseif (str_starts_with($inputString, 'letter:')) {
         $letter = substr($inputString, 7);
         if (strlen($letter) !== 1) {
@@ -137,10 +137,11 @@ final class CliContext
             exit(1);
         }
 
-        $input = Input::letter(
+        $input = Input::digit(
             $letter,
             $context->getOption('letter-color', '#FFFFFF'),
             $context->getOption('letter-background', $context->getOption('theme-color', '#00AAAD')),
+            $context->getOption('icon-background', 'transparent'),
         );
     } else {
         writeln('[ERROR] Unknown input string %s. Please start with file: or letter:', $inputString);
@@ -159,7 +160,6 @@ final class CliContext
     $generator = new FullPackageGenerator(
         $input,
         $context->getOption('theme-color', '#00AAAD'),
-        $context->getOption('background-color', 'transparent'),
         $tileColor,
         $name,
         $rootPrefix,

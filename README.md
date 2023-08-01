@@ -46,14 +46,14 @@ $html = $document->createElement('html');
 $document->appendChild($html);
 
 $head = $document->createElement('head');
-foreach ($generator->headTags($document) as $tag) {
+foreach ($generator->headTags($document, $manifest, '/') as $tag) {
     $head->appendChild($tag);
 }
 
 // or just generate the tag strings
 $tags = [];
 $document = new DOMDocument('1.0', 'UTF-8');
-foreach ($generator->headTags($document) as $tag) {
+foreach ($generator->headTags($document, $manifest, '/') as $tag) {
     $tags[] = $document->saveHTML($tag);
 }
 ```

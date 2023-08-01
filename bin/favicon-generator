@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Genkgo\Favicon\FullPackageGenerator;
 use Genkgo\Favicon\Input;
 use Genkgo\Favicon\InputImageType;
+use Genkgo\Favicon\WebApplicationManifest;
+use Genkgo\Favicon\WebApplicationManifestDisplay;
 
 function writeln(string $line, string|int ... $values): void {
     echo sprintf($line, ...$values) . "\n";
@@ -154,17 +156,16 @@ final class CliContext
         $outputDirectory = getcwd();
     }
 
-    $tileColor = $context->getOption('tile-color', '#00AAAD');
-    $rootPrefix = $context->getOption('root', '/');
-
-    $generator = FullPackageGenerator::newGenerator(
-        $input,
-        $context->getOption('theme-color', '#00AAAD'),
-        $tileColor,
+    $generator = FullPackageGenerator::newGenerator();
+    $manifest = new WebApplicationManifest(
+        WebApplicationManifestDisplay::Standalone,
         $name,
-        $rootPrefix,
+        $name,
+        $context->getOption('theme-color', '#00AAAD'),
+        $context->getOption('tile-color', '#00AAAD'),
     );
-    foreach ($generator->package() as $fileName => $contents) {
+
+    foreach ($generator->package($input, $manifest, $context->getOption('root', '/')) as $fileName => $contents) {
         $pathName = $outputDirectory . '/' . $fileName;
         $result = file_put_contents($pathName, $contents);
         if ($result === false) {

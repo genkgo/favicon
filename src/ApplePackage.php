@@ -7,25 +7,21 @@ namespace Genkgo\Favicon;
 final class ApplePackage implements PackageAppendInterface
 {
     public function __construct(
-        private readonly Input $input,
-        private readonly string $themeColor,
-        private readonly string $rootPrefix = '/',
         private readonly int $size = 180,
     ) {
     }
 
-    public function package(): \Generator
+    public function package(Input $input, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
-        $generator = new AppleTouchGenerator($this->input, $this->size);
+        $generator = new AppleTouchGenerator($input, $this->size);
         yield 'apple-touch-icon.png' => $generator->generate();
 
-        $generator = AppleSafariPinGenerator::cliDetectImageMagickVersion($this->input);
+        $generator = AppleSafariPinGenerator::cliDetectImageMagickVersion($input);
         yield 'safari-pinned-tab.svg' => $generator->generate();
     }
 
-    public function headTags(\DOMDocument $document): \Generator
+    public function headTags(\DOMDocument $document, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
-        $rootPrefix = $this->rootPrefix;
         if (\substr($rootPrefix, -1, 1) === '/') {
             $rootPrefix = \substr($rootPrefix, 0, -1);
         }
@@ -39,7 +35,7 @@ final class ApplePackage implements PackageAppendInterface
         $link = $document->createElement('link');
         $link->setAttribute('rel', 'mask-icon');
         $link->setAttribute('href', $rootPrefix . '/safari-pinned-tab.svg');
-        $link->setAttribute('color', $this->themeColor);
+        $link->setAttribute('color', $manifest->themeColor);
         yield $link;
     }
 }

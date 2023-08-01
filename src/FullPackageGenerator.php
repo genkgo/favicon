@@ -8,13 +8,12 @@ final class FullPackageGenerator implements PackageAppendInterface
 {
     private function __construct(
         private readonly AggregatePackage $packages,
-        private readonly string $themeColor
     ) {
     }
 
-    public function package(): \Generator
+    public function package(Input $input, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
-        yield from $this->packages->package();
+        yield from $this->packages->package($input, $manifest, $rootPrefix);
 
         $impl = new \DOMImplementation();
         $doctype = $impl->createDocumentType('html');
@@ -23,7 +22,7 @@ final class FullPackageGenerator implements PackageAppendInterface
         $html = $document->createElement('html');
         $head = $document->createElement('head');
 
-        foreach ($this->headTags($document) as $tag) {
+        foreach ($this->headTags($document, $manifest, $rootPrefix) as $tag) {
             $head->appendChild($tag);
         }
 
@@ -33,44 +32,25 @@ final class FullPackageGenerator implements PackageAppendInterface
         yield 'index.html' => $document->saveHTML();
     }
 
-    public function headTags(\DOMDocument $document): \Generator
+    public function headTags(\DOMDocument $document, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
-        yield from $this->packages->headTags($document);
+        yield from $this->packages->headTags($document, $manifest, $rootPrefix);
 
         $meta = $document->createElement('meta');
         $meta->setAttribute('name', 'theme-color');
-        $meta->setAttribute('content', $this->themeColor);
+        $meta->setAttribute('content', $manifest->themeColor);
         yield $meta;
     }
 
-    public static function newGenerator(
-        Input $input,
-        string $themeColor,
-        string $tileColor,
-        string $name,
-        string $rootPrefix = '/',
-        ?string $shortName = null,
-    ): self
+    public static function newGenerator(): self
     {
         return new self(
             new AggregatePackage([
-                new ApplePackage($input, $themeColor, $rootPrefix),
-                new GenericIcoPackage($input, $rootPrefix),
-                new GenericPngPackage(
-                    $input,
-                    $name,
-                    $shortName ?? $name,
-                    $themeColor,
-                    $rootPrefix,
-                    $tileColor,
-                ),
-                new MicrosoftTilePackage(
-                    $input,
-                    $tileColor,
-                    $rootPrefix,
-                ),
+                new ApplePackage(),
+                new GenericIcoPackage(),
+                new GenericPngPackage(),
+                new MicrosoftTilePackage(),
             ]),
-            $themeColor
         );
     }
 }

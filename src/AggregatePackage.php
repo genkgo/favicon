@@ -16,17 +16,17 @@ final class AggregatePackage implements PackageAppendInterface
     /**
      * @throws \ImagickException
      */
-    public function package(): \Generator
+    public function package(Input $input, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
         foreach ($this->generators as $generator) {
-            yield from $generator->package();
+            yield from $generator->package($input, $manifest, $rootPrefix);
         }
     }
 
-    public function headTags(\DOMDocument $document): \Generator
+    public function headTags(\DOMDocument $document, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
         foreach ($this->generators as $generator) {
-            yield from $generator->headTags($document);
+            yield from $generator->headTags($document, $manifest, $rootPrefix);
         }
     }
 }

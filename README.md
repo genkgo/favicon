@@ -27,14 +27,15 @@ $input = Favicon\Input::fromFile('/var/www/html/logo.svg', InputImageType::SVG);
 // or create a letter avatar
 $input = Favicon\Input::digit('G', '#FFFFFF', '#00AAAD');
 
-$generator = new Favicon\FullPackageGenerator(
-    $input,
+$generator = Favicon\FullPackageGenerator::newGenerator();
+$manifest = new Favicon\WebApplicationManifest(
+    Favicon\WebApplicationManifestDisplay::Standalone,
+    'Title of website',
+    'Short name of website',
     '#00AAAD', // theme color
     '#00AAAD', // tile color
-    'Website Title',
-    '/',
 );
-foreach ($generator->package() as $fileName => $contents) {
+foreach ($generator->package($input, $manifest, '/') as $fileName => $contents) {
     $pathName = $outputDirectory . '/' . $fileName;
     file_put_contents($pathName, $contents);
 }

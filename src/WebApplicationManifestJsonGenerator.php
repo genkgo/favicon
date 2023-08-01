@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Genkgo\Favicon;
 
-final class WebApplicationJsonGenerator implements GeneratorInterface
+final class WebApplicationManifestJsonGenerator implements GeneratorInterface
 {
     public function __construct(
-        private readonly WebApplicationManifestDisplay $display,
-        private readonly string $name,
-        private readonly string $shortName,
-        private readonly string $themeColor,
-        private readonly string $backgroundColor,
+        private readonly WebApplicationManifest $manifest,
         private readonly array $pngFormats,
     ) {
     }
@@ -19,11 +15,11 @@ final class WebApplicationJsonGenerator implements GeneratorInterface
     public function generate(): string
     {
         $manifest = [
-            'display' => $this->display->value,
-            'name' => $this->name,
-            'short_name' => $this->shortName,
-            'theme_color' => $this->themeColor,
-            'background_color' => $this->backgroundColor,
+            'display' => $this->manifest->display->value,
+            'name' => $this->manifest->name,
+            'short_name' => $this->manifest->shortName,
+            'theme_color' => $this->manifest->themeColor,
+            'background_color' => $this->manifest->backgroundColor,
             'icons' => [],
         ];
 

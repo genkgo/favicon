@@ -10,17 +10,14 @@ final class MicrosoftTilePackage implements PackageAppendInterface
      * @param array<int, int> $sizes
      */
     public function __construct(
-        private readonly Input $input,
-        private readonly string $tileColor,
-        private readonly string $rootPrefix = '/',
         private readonly array $sizes = [150, 310],
     ) {
     }
 
-    public function package(): \Generator
+    public function package(Input $input, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
         foreach ($this->sizes as $size) {
-            $generator = new PngGenerator($this->input, $size);
+            $generator = new PngGenerator($input, $size);
             yield 'mstile-' . $size . 'x' . $size . '.png' => $generator->generate();
         }
 
@@ -30,17 +27,16 @@ final class MicrosoftTilePackage implements PackageAppendInterface
         }
 
         $browserConfigXml = new BrowserConfigXmlGenerator(
-            $this->tileColor,
+            $manifest->backgroundColor,
             $configSizes,
-            $this->rootPrefix,
+            $rootPrefix,
         );
 
         yield 'browserconfig.xml' => $browserConfigXml->generate();
     }
 
-    public function headTags(\DOMDocument $document): \Generator
+    public function headTags(\DOMDocument $document, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
-        $rootPrefix = $this->rootPrefix;
         if (\substr($rootPrefix, -1, 1) === '/') {
             $rootPrefix = \substr($rootPrefix, 0, -1);
         }
@@ -52,7 +48,7 @@ final class MicrosoftTilePackage implements PackageAppendInterface
 
         $meta = $document->createElement('meta');
         $meta->setAttribute('name', 'msapplication-TileColor');
-        $meta->setAttribute('content', $this->tileColor);
+        $meta->setAttribute('content', $manifest->backgroundColor);
         yield $meta;
 
         $defaultSize = $this->sizes[\array_key_first($this->sizes)];

@@ -10,17 +10,15 @@ final class GenericIcoPackage implements PackageAppendInterface
      * @param array<int, int> $sizes
      */
     public function __construct(
-        private readonly Input $input,
-        private readonly string $rootPrefix = '/',
         private readonly array $sizes = [48],
     ) {
     }
 
-    public function package(): \Generator
+    public function package(Input $input, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
         $first = true;
         foreach ($this->sizes as $size) {
-            $generator = new IcoGenerator($this->input, $size);
+            $generator = new IcoGenerator($input, $size);
             $blob = $generator->generate();
             if ($first) {
                 yield 'favicon.ico' => $blob;
@@ -31,9 +29,8 @@ final class GenericIcoPackage implements PackageAppendInterface
         }
     }
 
-    public function headTags(\DOMDocument $document): \Generator
+    public function headTags(\DOMDocument $document, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
-        $rootPrefix = $this->rootPrefix;
         if (\substr($rootPrefix, -1, 1) === '/') {
             $rootPrefix = \substr($rootPrefix, 0, -1);
         }

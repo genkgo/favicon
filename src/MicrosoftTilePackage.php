@@ -54,7 +54,7 @@ final class MicrosoftTilePackage implements PackageAppendInterface
         $defaultSize = $this->sizes[\array_key_first($this->sizes)];
         $meta = $document->createElement('meta');
         $meta->setAttribute('name', 'msapplication-TileImage');
-        $meta->setAttribute('content', 'mstile-' . $defaultSize . 'x' . $defaultSize . '.png');
+        $meta->setAttribute('content', $rootPrefix . '/mstile-' . $defaultSize . 'x' . $defaultSize . '.png');
         yield $meta;
     }
 }

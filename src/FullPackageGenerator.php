@@ -6,35 +6,81 @@ namespace Genkgo\Favicon;
 
 final class FullPackageGenerator implements PackageAppendInterface
 {
-    public function __construct(
-        private readonly Input $input,
-        private readonly string $themeColor,
-        private readonly string $tileColor,
-        private readonly string $name,
-        private readonly string $rootPrefix = '/',
-        private readonly ?string $shortName = null,
+    private function __construct(
+        private readonly AggregatePackage $packages,
+        private readonly string $title,
+        private readonly string $themeColor
     ) {
     }
 
     public function package(): \Generator
     {
-        $generator = new AggregatePackage([
-            new ApplePackage($this->input),
-            new GenericIcoPackage($this->input),
-            new GenericPngPackage(
-                $this->input,
-                $this->name,
-                $this->shortName ?? $this->name,
-                $this->themeColor,
-                $this->rootPrefix,
-                $this->tileColor,
-            ),
-            new MicrosoftTilePackage(
-                $this->input,
-                $this->tileColor,
-                $this->rootPrefix,
-            ),
-        ]);
-        return $generator->package();
+        yield from $this->packages->package();
+
+        $impl = new \DOMImplementation();
+        $doctype = $impl->createDocumentType('html');
+        $document = $impl->createDocument(null, '', $doctype);
+
+        $html = $document->createElement('html');
+        $head = $document->createElement('head');
+
+        $meta = $document->createElement('meta');
+        $meta->setAttribute('http-equiv', 'Content-Type');
+        $meta->setAttribute('content', 'text/html; charset=utf-8');
+        $head->appendChild($meta);
+
+        $title = $document->createElement('title', $this->title);
+        $head->appendChild($title);
+
+        foreach ($this->headTags($document) as $tag) {
+            $head->appendChild($tag);
+        }
+
+        $html->appendChild($head);
+        $document->appendChild($html);
+        $document->formatOutput = true;
+        yield 'index.html' => $document->saveHTML();
+    }
+
+    public function headTags(\DOMDocument $document): \Generator
+    {
+        yield from $this->packages->headTags($document);
+
+        $meta = $document->createElement('meta');
+        $meta->setAttribute('name', 'theme-color');
+        $meta->setAttribute('content', $this->themeColor);
+        yield $meta;
+    }
+
+    public static function newGenerator(
+        Input $input,
+        string $themeColor,
+        string $tileColor,
+        string $name,
+        string $rootPrefix = '/',
+        ?string $shortName = null,
+    ): self
+    {
+        return new self(
+            new AggregatePackage([
+                new ApplePackage($input, $themeColor, $rootPrefix),
+                new GenericIcoPackage($input, $rootPrefix),
+                new GenericPngPackage(
+                    $input,
+                    $name,
+                    $shortName ?? $name,
+                    $themeColor,
+                    $rootPrefix,
+                    $tileColor,
+                ),
+                new MicrosoftTilePackage(
+                    $input,
+                    $tileColor,
+                    $rootPrefix,
+                ),
+            ]),
+            $name,
+            $themeColor
+        );
     }
 }

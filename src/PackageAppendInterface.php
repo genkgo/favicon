@@ -11,4 +11,10 @@ interface PackageAppendInterface
      * @throws \ImagickException
      */
     public function package(): \Generator;
+
+    /**
+     * @param \DOMDocument $document
+     * @return \Generator<int|string, \DOMElement>
+     */
+    public function headTags(\DOMDocument $document): \Generator;
 }

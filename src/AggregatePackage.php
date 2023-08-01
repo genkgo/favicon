@@ -14,12 +14,19 @@ final class AggregatePackage implements PackageAppendInterface
     }
 
     /**
-     * @return \Generator<string, string>
+     * @throws \ImagickException
      */
     public function package(): \Generator
     {
         foreach ($this->generators as $generator) {
             yield from $generator->package();
+        }
+    }
+
+    public function headTags(\DOMDocument $document): \Generator
+    {
+        foreach ($this->generators as $generator) {
+            yield from $generator->headTags($document);
         }
     }
 }

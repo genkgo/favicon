@@ -53,4 +53,26 @@ final class GenericPngPackage implements PackageAppendInterface
 
         yield 'web-app-manifest.json' => $manifest->generate();
     }
+
+    public function headTags(\DOMDocument $document): \Generator
+    {
+        $rootPrefix = $this->rootPrefix;
+        if (\substr($rootPrefix, -1, 1) === '/') {
+            $rootPrefix = \substr($rootPrefix, 0, -1);
+        }
+
+        foreach ($this->sizes as $size) {
+            $link = $document->createElement('link');
+            $link->setAttribute('rel', 'icon');
+            $link->setAttribute('type', 'image/png');
+            $link->setAttribute('href', $rootPrefix . '/favicon-' . $size . 'x' . $size . '.png');
+            $link->setAttribute('sizes', $size . 'x' . $size);
+            yield $link;
+        }
+
+        $link = $document->createElement('link');
+        $link->setAttribute('rel', 'manifest');
+        $link->setAttribute('href', $rootPrefix . '/web-app-manifest.json');
+        yield $link;
+    }
 }

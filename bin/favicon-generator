@@ -157,7 +157,7 @@ final class CliContext
     $tileColor = $context->getOption('tile-color', '#00AAAD');
     $rootPrefix = $context->getOption('root', '/');
 
-    $generator = new FullPackageGenerator(
+    $generator = FullPackageGenerator::newGenerator(
         $input,
         $context->getOption('theme-color', '#00AAAD'),
         $tileColor,

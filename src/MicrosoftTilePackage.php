@@ -13,7 +13,7 @@ final class MicrosoftTilePackage implements PackageAppendInterface
         private readonly Input $input,
         private readonly string $tileColor,
         private readonly string $rootPrefix = '/',
-        private readonly array $sizes = [70, 150, 310],
+        private readonly array $sizes = [150, 310],
     ) {
     }
 
@@ -36,5 +36,29 @@ final class MicrosoftTilePackage implements PackageAppendInterface
         );
 
         yield 'browserconfig.xml' => $browserConfigXml->generate();
+    }
+
+    public function headTags(\DOMDocument $document): \Generator
+    {
+        $rootPrefix = $this->rootPrefix;
+        if (\substr($rootPrefix, -1, 1) === '/') {
+            $rootPrefix = \substr($rootPrefix, 0, -1);
+        }
+
+        $meta = $document->createElement('meta');
+        $meta->setAttribute('name', 'msapplication-config');
+        $meta->setAttribute('content', $rootPrefix . '/browserconfig.xml');
+        yield $meta;
+
+        $meta = $document->createElement('meta');
+        $meta->setAttribute('name', 'msapplication-TileColor');
+        $meta->setAttribute('content', $this->tileColor);
+        yield $meta;
+
+        $defaultSize = $this->sizes[\array_key_first($this->sizes)];
+        $meta = $document->createElement('meta');
+        $meta->setAttribute('name', 'msapplication-TileImage');
+        $meta->setAttribute('content', 'mstile-' . $defaultSize . 'x' . $defaultSize . '.png');
+        yield $meta;
     }
 }

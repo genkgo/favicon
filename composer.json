@@ -12,10 +12,5 @@
       "Genkgo\\Favicon\\": ["src"]
     }
   },
-  "autoload-dev": {
-    "psr-4": {
-      "Genkgo\\TestFavicon\\": ["test"]
-    }
-  },
   "bin": ["bin/favicon-generator"]
 }

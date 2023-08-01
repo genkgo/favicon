@@ -23,11 +23,6 @@ final class FullPackageGenerator implements PackageAppendInterface
         $html = $document->createElement('html');
         $head = $document->createElement('head');
 
-        $meta = $document->createElement('meta');
-        $meta->setAttribute('http-equiv', 'Content-Type');
-        $meta->setAttribute('content', 'text/html; charset=utf-8');
-        $head->appendChild($meta);
-
         foreach ($this->headTags($document) as $tag) {
             $head->appendChild($tag);
         }

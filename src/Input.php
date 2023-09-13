@@ -62,20 +62,22 @@ final class Input
         $height = $imagick->getImageHeight();
 
         $resizeTo = \max($width, $height);
-        $padding = (int)(0.05 * $resizeTo);
+        $radius = (int)(0.05 * $resizeTo);
+        $padding = (int)(0.1 * $resizeTo);
 
         $composite = new \Imagick();
-        $composite->newImage($resizeTo, $resizeTo, new \ImagickPixel('none'));
+        $composite->setBackgroundColor($imagick->getImageBackgroundColor());
+        $composite->newImage($resizeTo + $padding * 2, $resizeTo + $padding * 2, new \ImagickPixel('transparent'));
 
         $paddingDraw = new \ImagickDraw();
         $paddingDraw->setFillColor($imagick->getImageBackgroundColor());
         $paddingDraw->roundRectangle(
             0,
             0,
-            $resizeTo,
-            $resizeTo,
-            $padding,
-            $padding
+            $resizeTo + $padding * 2,
+            $resizeTo + $padding * 2,
+            $radius,
+            $radius
         );
 
         $composite->drawImage($paddingDraw);
@@ -83,11 +85,11 @@ final class Input
         $composite->compositeImage(
             $imagick,
             \Imagick::COMPOSITE_DEFAULT,
-            (int)(($resizeTo - $width) / 2),
-            (int)(($resizeTo - $height) / 2),
+            (int)(($resizeTo + $padding * 2 - $width) / 2),
+            (int)(($resizeTo + $padding * 2 - $height) / 2),
         );
 
-        return $imagick->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN);
+        return $composite;
     }
 
     /**

@@ -19,7 +19,8 @@ final class AppleTouchGenerator implements GeneratorInterface
         $newWidth = $imagick->getImageWidth();
         $newHeight = $imagick->getImageHeight();
 
-        $padding = (int)(0.1 * $newWidth);
+        $padding = (int)(0.05 * $newWidth);
+        $radius = (int)(0.15 * $newWidth);
         $composite = new \Imagick();
         $composite->newImage($newWidth + 2 * $padding, $newHeight + 2 * $padding, new \ImagickPixel('none'));
 
@@ -30,8 +31,8 @@ final class AppleTouchGenerator implements GeneratorInterface
             0,
             $newWidth + 2 * $padding,
             $newHeight + 2 * $padding,
-            $padding,
-            $padding
+            $radius,
+            $radius
         );
         $composite->drawImage($paddingDraw);
         $composite->setImageFormat('png');

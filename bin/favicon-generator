@@ -108,7 +108,7 @@ final class CliContext
         writeln('Options:');
         writeln('--icon-background      Set color under icon, defaults to transparent');
         writeln('--theme-color          Color to used in manifest `theme_color` and default letter background color, defaults to #00AAAD');
-        writeln('--tile-color           Color to used in manifest `background_color` and used fill ms-tiles with, defaults to #00AAAD');
+        writeln('--tile-color           Color to used in manifest `background_color` and used fill apple touch and ms-tiles with, defaults to #00AAAD');
         writeln('--letter-color         Color of the letter, used when using letter: input, defaults to #FFFFFF');
         writeln('--letter-background    Color of the background, used when using letter: input, defaults to theme color');
         writeln('--root                 Location inside the root directory where the favicons are saved to, defaults to /');

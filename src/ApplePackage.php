@@ -13,7 +13,7 @@ final class ApplePackage implements PackageAppendInterface
 
     public function package(Input $input, WebApplicationManifest $manifest, string $rootPrefix): \Generator
     {
-        $generator = new AppleTouchGenerator($input, $this->size);
+        $generator = new AppleTouchGenerator($input, $this->size, $manifest->backgroundColor);
         yield 'apple-touch-icon.png' => $generator->generate();
 
         $generator = AppleSafariPinGenerator::cliDetectImageMagickVersion($input);

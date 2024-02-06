@@ -7,7 +7,7 @@ Requires PHP 8.1+ and both the imagick and DOM extension.
 ## Install using composer
 
 ```bash
-$ composer require genkgo/favicon
+composer require genkgo/favicon
 ```
 
 

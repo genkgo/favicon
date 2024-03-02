@@ -3,7 +3,7 @@
   "description": "Generate browser favicons",
   "license": "MIT",
   "require": {
-    "php": "~8.1.0 || ~8.2.0",
+    "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
     "ext-imagick": "*",
     "ext-dom": "*"
   },

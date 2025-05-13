@@ -8,6 +8,7 @@ final class BrowserConfigXmlGenerator implements GeneratorInterface
 {
     public function __construct(
         private readonly string $tileColor,
+        /** @var array<string, string> */
         private readonly array $formats,
         private readonly string $rootPrefix = '/',
     ) {

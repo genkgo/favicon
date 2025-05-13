@@ -39,7 +39,7 @@ final class AppleSafariPinGenerator implements GeneratorInterface
                 \fclose($pipes[1]);
                 \fclose($pipes[2]);
 
-                $return = proc_close($process);
+                $return = \proc_close($process);
                 if ($return !== 0) {
                     throw new \UnexpectedValueException(
                         'Failed to convert PNG to SVG. Got return code ' . $return . '.'  . $stdout . $stderr
@@ -51,7 +51,7 @@ final class AppleSafariPinGenerator implements GeneratorInterface
         );
     }
 
-    public function tempFile(callable $callback, string $prefix = 'favicon-tmp')
+    public function tempFile(callable $callback, string $prefix = 'favicon-tmp'): mixed
     {
         $tempSource = \tempnam(\sys_get_temp_dir(), $prefix);
         if ($tempSource === false) {
@@ -78,22 +78,22 @@ final class AppleSafariPinGenerator implements GeneratorInterface
 
     public static function cliImageMagick6(Input $input): self
     {
-        return new self ($input, 'convert');
+        return new self($input, 'convert');
     }
 
     public static function cliImageMagick7(Input $input): self
     {
-        return new self ($input, 'magick');
+        return new self($input, 'magick');
     }
 
     public static function cliDetectImageMagickVersion(Input $input): self
     {
         $version = \Imagick::getVersion();
-        if (str_starts_with($version['versionString'], 'ImageMagick 7')) {
+        if (\str_starts_with($version['versionString'], 'ImageMagick 7')) {
             return self::cliImageMagick7($input);
         }
 
-        if (str_starts_with($version['versionString'], 'ImageMagick 6')) {
+        if (\str_starts_with($version['versionString'], 'ImageMagick 6')) {
             return self::cliImageMagick6($input);
         }
 

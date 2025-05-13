@@ -12,7 +12,6 @@ final class WebApplicationManifest
         public readonly string $shortName,
         public readonly string $themeColor,
         public readonly string $backgroundColor,
-    )
-    {
+    ) {
     }
 }

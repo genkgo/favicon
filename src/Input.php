@@ -11,8 +11,7 @@ final class Input
         private readonly \Imagick $image,
         public readonly InputImageType $type,
         public readonly string $backgroundColor = 'transparent',
-    )
-    {
+    ) {
     }
 
     /**
@@ -37,8 +36,7 @@ final class Input
         string $fileName,
         InputImageType $type,
         string $backgroundColor = 'transparent',
-    ): self
-    {
+    ): self {
         if (!\is_file($fileName)) {
             throw new \InvalidArgumentException('File ' . $fileName . ' does not exist');
         }
@@ -102,8 +100,7 @@ final class Input
         string $color,
         string $iconBackground,
         string $backgroundColor = 'transparent'
-    ): self
-    {
+    ): self {
         $imagick = self::createDigitImagick($digit, $color, $iconBackground, $backgroundColor);
         return new self(
             'data://image/png;base64,' . \base64_encode((string)$imagick),
@@ -123,8 +120,7 @@ final class Input
         string $color,
         string $iconBackground,
         string $backgroundColor
-    ): \Imagick
-    {
+    ): \Imagick {
         $size = 512;
 
         $imagick = new \Imagick();

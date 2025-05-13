@@ -8,6 +8,7 @@ final class WebApplicationManifestJsonGenerator implements GeneratorInterface
 {
     public function __construct(
         private readonly WebApplicationManifest $manifest,
+        /** @var array<string, string> */
         private readonly array $pngFormats,
     ) {
     }

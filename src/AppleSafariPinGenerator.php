@@ -67,8 +67,10 @@ final class AppleSafariPinGenerator implements GeneratorInterface
         try {
             return $callback($tempSource, $tempTarget);
         } finally {
-            \unlink($tempSource);
-            if (\is_file($tempTarget) {
+            if (\is_file($tempSource)) {
+                \unlink($tempSource);
+            }
+            if (\is_file($tempTarget)) {
                 \unlink($tempTarget);
             }
         }

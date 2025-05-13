@@ -2,10 +2,8 @@
 name: code check
 
 on:
-  pull_request: null
   push:
-    branches:
-      - master
+  pull_request:
 
 jobs:
   tests:
